@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken');
+const saltRounds = 10;
 
 const userSchema = mongoose.Schema({
     name : { // 이름
@@ -26,6 +29,43 @@ const userSchema = mongoose.Schema({
         type : Number
     }
 })
+userSchema.pre('save', function(next){
+    let user = this; 
+
+    if(user.isModified('password')) {   
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            if (err) return next(err); 
+            bcrypt.hash(user.password, salt, function(err, hash) {
+                if(err) return next(err);
+                user.password = hash
+                next();
+            });
+        });
+    }else{
+        next();
+    }
+})
+
+
+userSchema.methods.comparePassword = function(plainPassword, callback){
+    bcrypt.compare(plainPassword, this.password, function (err, isMatch) {
+        if(err) return callback(err); 
+        callback(null, isMatch);
+    })
+}
+
+userSchema.methods.generateToken = function (callback) {
+    //jwt을 이용해서 토큰 생성하기
+    let user = this; //마찬가지로 입력 정보를 this로 가져온다 
+    let token = jwt.sign(user._id, "secrettoken") // 여기서의 id는 고유값인 _id : ObjectId("...") 를 말한다
+    //이렇게 sign에 고유값_id와 문장을 넣어주면 이 둘을 더해서 토큰을 만들어준다
+    //추후에 jwt 조회를 할 시 ObjectId를 받아와서 문장을 더해 토큰화 해서 둘을 비교하는 방식으로 인증한다
+
+    user.token = token; // 로그인유저의 token정보에 암호화된 token을 넣어준다
+}
+
+
+
 
 const User = mongoose.model('User',userSchema ) // (모델의 이름, 스키마)
 module.exports = {User}

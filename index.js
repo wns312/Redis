@@ -23,19 +23,37 @@ app.get('/', (req,res)=>{
 })
 
 app.post('/register', (req, res)=>{
-    //회원가입 정보를 client에서 가져오면,
-    // 그것들을 데이터베이스에 넣어준다
-    const user = new User(req.body); // 데이터를 객체에 넣어준 것(JSON)
-    //save하면 객체에 넣은 데이터를 DB에 업데이트한다. save에는 콜백 function이 인수로 들어간다.
-    user.save((err, doc)=>{ // 인수는 err과 doc 두가지 (여기서 doc은 유저정보)
-        if(err) {return res.json({ success : false, err})} // 에러시 success변수와 에러를 보냄
+    
+    const user = new User(req.body); 
+    user.save((err, doc)=>{ 
+        if(err) {return res.json({ success : false, err})} 
         
-        //200은 성공했다는 의미를 담고 있는 상태번호이다 성공했다는 신호를 보내고 json파일로
-        // success 변수를 보낸다 (res.json() 은 json타입 데이터를 리턴시키는 함수이다) 
         return res.status(200).json({
             success : true
         })
     });
+})
+
+app.post('./login', (req, res)=>{
+    User.findOne({email : req.body.email}, function (err, user) {
+        if(!err) return res.json({ loginSuccess : false, err })
+        if(!user) return res.json({ loginSuccess : false, message : "이메일에 해당하는 유저가 없습니다"})
+
+        user.comparePassword(req.body.comparePassword, (err, isMatch)=>{
+            if(!err) return res.json({loginSuccess : false, err});
+            if(!isMatch) {
+                return res.json({
+                    loginSuccess : false,
+                    message : "비밀번호가 일치하지 않습니다"
+                })
+            }
+    //3. 일치시 유저를 위한 토큰을 생성한다
+    // 다시 스키마에 generateToken함수를 만들어준다.
+            user.generateToken((err, user)=>{
+
+            });
+        })
+    }) 
 })
 
 app.listen(port, ()=>{
