@@ -10,6 +10,10 @@ const userSchema = mongoose.Schema({
         trim : true, // 앞뒤공백제거
         unique : 1 // 유일값
     },
+    password : {
+        type : String,
+        minLength : 5
+    },
     role : { // 관리자와 일반사용자 구분을 위해
         type : Number, //0이면 일반, 관리자면 1 처럼 구분
         default : 0 // 따로 정하지 않으면 role을 0을 준다
