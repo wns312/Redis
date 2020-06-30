@@ -21,7 +21,7 @@ const userSchema = mongoose.Schema({
   },
   role: {
     // 관리자와 일반사용자 구분을 위해
-    type: Number, //0이면 일반, 관리자면 1 처럼 구분
+    type: Number, //0이면 일반, 관리자면 1  구분
     default: 0, // 따로 정하지 않으면 role을 0을 준다
   },
   image: String, // 프로필이미지
@@ -60,7 +60,6 @@ userSchema.methods.comparePassword = function (plainPassword, callback) {
 };
 
 userSchema.methods.generateToken = function (callback) {
-  
   let user = this; JSON.stringify()
   let token = jwt.sign(user._id.toHexString(), "secretToken"); 
   user.token = token; 
@@ -70,6 +69,19 @@ userSchema.methods.generateToken = function (callback) {
     callback(null, user); 
   });
 };
+
+//객체생성 안하고 쓸거라서 statics로 생성
+userSchema.statics.findByToken = function (token, callback) {
+  let user = this;
+  //토큰을 복호화한다.
+  jwt.verify(token, "secretToken", function (err, decoded) {//복호화 메소드
+    //유저아이디로 유저를 찾고, 클라이언트에서 가져온 토큰을 비교
+    user.findOne({"_id" : decoded, "token" : token}, (err, user)=>{ 
+      if(err) return callback(err);
+      callback(null, user)
+    })
+  }) 
+}
 
 const User = mongoose.model('User',userSchema ) // (모델의 이름, 스키마)
 module.exports = {User}

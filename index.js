@@ -7,6 +7,7 @@ const port = 3000;
 //{User}로 가져오는 이유는 export를 {User}로 해주었기 때문이다.
 const {User} = require('./models/User');
 const {mongoURI} = require('./config/key') 
+const {auth} = require('./middleware/auth') 
 
 //application/x-www-form-urlencoded 타입 데이터를 분석해서 가져올 수 있게 해준다.
 app.use(bodyParser.urlencoded({extended : true}));
@@ -26,7 +27,7 @@ app.get('/', (req,res)=>{
   res.send('Hello world')
 })
 
-app.post('api/users/register', (req, res)=>{ 
+app.post('/api/users/register', (req, res)=>{ 
   const user = new User(req.body); 
   user.save((err, doc)=>{ 
     if(err) {return res.json({ success : false, err})} 
@@ -37,7 +38,7 @@ app.post('api/users/register', (req, res)=>{
   });
 })
 
-app.post("api/users/login", (req, res) => {
+app.post("/api/users/login", (req, res) => {
   User.findOne({ email: req.body.email }, function (err, user) {
     if (!user)
       return res.json({
@@ -65,6 +66,22 @@ app.post("api/users/login", (req, res) => {
     });
   });
 });
+
+app.get('/api/users/auth', auth,  (req, res)=>{ // auth는 ()를 적지 않는다
+  //여기까지 왔다는것은, Auth가 true라는 뜻이다
+  res.status(200).json({
+    //원하는것만 전달해주면 된다
+    userId : req.user._id,
+    isAdmin : req.user.role === 0 ? false : true, // 0이 아니면 관리자인 것
+    isAuth : true,
+    email : req.user.email,
+    name : req.user.name,
+    lastname : req.user.lastname,
+    image : req.user.image
+  })
+})
+
+
 
 app.listen(port, ()=>{
     console.log(`http://localhost:${port}`);
