@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import './LoginPage.css'
-import Axios from 'axios'
+import { useDispatch } from "react-redux"
+import {loginUser} from '../../../_actions/user_action'
 
-const LoginPage = () => {
+const LoginPage = (props) => {
+  const dispatch = useDispatch();
+
   const [ Email, setEmail ] = useState("");
   const [ Password, setPassword ] = useState("");
 
@@ -14,10 +17,20 @@ const LoginPage = () => {
   }
   function onSubmitHandler(event) {
     event.preventDefault();
-
-    Axios.post('/api/users/login', {})
-    .then((response)=>{})
-    .catch(()=>{})
+    let body = {
+      email : Email,
+      password : Password
+    }
+    dispatch(loginUser(body))
+    .then(response=>{
+      if(response.payload.loginSuccess){
+        // props.history.push('/')
+        console.log(response.payload.loginSuccess);
+        
+      }else{
+        alert("Error")
+      }
+    }) 
   }
   return (
     <div id ='div'>
