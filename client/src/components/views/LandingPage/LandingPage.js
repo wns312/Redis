@@ -1,9 +1,10 @@
 import React from 'react';
+import './LandingPage.css'
 
 const LandingPage = () => {
   return (
-    <div>
-      랜딩
+    <div id='div'>
+      홈
     </div>
   );
 };
