@@ -25,8 +25,6 @@ const LoginPage = (props) => {
     .then(response=>{
       if(response.payload.loginSuccess){
         props.history.push('/')
-        // console.log(response.payload.loginSuccess);
-        
       }else{
         alert("Error")
       }

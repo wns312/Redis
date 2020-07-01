@@ -18,9 +18,10 @@ export function registerUser(dataToSubmit) {
     payload : request // {success: boolean} 이 리턴됨
   }
 }
+
 export function auth() {
   const request = axios.get('/api/users/auth')
-  .then(response=>response.data)
+    .then(response => response.data)
   return {
     type : AUTH_USER,
     payload : request
