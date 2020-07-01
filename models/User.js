@@ -34,9 +34,9 @@ const userSchema = mongoose.Schema({
     type: Number,
   },
 });
-userSchema.pre('save', function(next){
-  let user = this;
 
+userSchema.pre('save', function (next) {
+  let user = this;
   if (user.isModified("password")) {
     bcrypt.genSalt(saltRounds, function (err, salt) {
       if (err) return next(err);
@@ -54,19 +54,19 @@ userSchema.pre('save', function(next){
 
 userSchema.methods.comparePassword = function (plainPassword, callback) {
   bcrypt.compare(plainPassword, this.password, function (err, isMatch) {
-    if (err) return callback(err) 
+    if (err) return callback(err)
     callback(null, isMatch);
   });
 };
 
 userSchema.methods.generateToken = function (callback) {
   let user = this; JSON.stringify()
-  let token = jwt.sign(user._id.toHexString(), "secretToken"); 
-  user.token = token; 
+  let token = jwt.sign(user._id.toHexString(), "secretToken");
+  user.token = token;
   user.save(function (err, user) {
-    
+
     if (err) return callback(err);
-    callback(null, user); 
+    callback(null, user);
   });
 };
 
@@ -76,12 +76,12 @@ userSchema.statics.findByToken = function (token, callback) {
   //토큰을 복호화한다.
   jwt.verify(token, "secretToken", function (err, decoded) {//복호화 메소드
     //유저아이디로 유저를 찾고, 클라이언트에서 가져온 토큰을 비교
-    user.findOne({"_id" : decoded, "token" : token}, (err, user)=>{ 
-      if(err) return callback(err);
+    user.findOne({ "_id": decoded, "token": token }, (err, user) => {
+      if (err) return callback(err);
       callback(null, user)
     })
-  }) 
+  })
 }
 
-const User = mongoose.model('User',userSchema ) // (모델의 이름, 스키마)
-module.exports = {User}
+const User = mongoose.model('User', userSchema) // (모델의 이름, 스키마)
+module.exports = { User }
