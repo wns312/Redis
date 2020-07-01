@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const app = express();
-const port = 3000;
 
 const { User } = require('./models/User');
 const { mongoURI } = require('./config/key')
@@ -16,12 +15,11 @@ app.use(bodyParser.json());
 //쿠키파서 사용설정
 app.use(cookieParser());
 
-
 mongoose.connect(mongoURI, {
   useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
 })
-  .then(() => { console.log("connected") })
-  .catch((err) => { console.log(err) })
+.then(() => { console.log("connected") })
+.catch((err) => { console.log(err) })
 
 app.get('/', (req, res) => {
   res.send('Hello world')
@@ -31,7 +29,6 @@ app.post('/api/users/register', (req, res) => {
   const user = new User(req.body);
   user.save((err, doc) => {
     if (err) { return res.json({ success: false, err }) }
-
     return res.status(200).json({
       success: true
     })
@@ -84,6 +81,7 @@ app.get('/api/users/logout', auth, (req, res)=>{
   })
 })
 
+const port = 5000;
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
 })
