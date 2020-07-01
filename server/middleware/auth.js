@@ -1,11 +1,8 @@
 const {User} = require('../models/User');
 
 let auth = (req, res, next)=>{
-  // 인증 처리 담당
-  //쿠키에서 토큰 가져오기
   let token = req.cookies.x_auth; // x_auth라는 이름으로 저장한 쿠키를 가져옴 (=token)
-  //토큰 복호화하기
-  //복호화된 토큰으로 유저 찾기
+
   User.findByToken(token, (err, user)=>{
     //유저가 있으면 인증 OK, 없으면 인증 NO
     if(err) throw err;

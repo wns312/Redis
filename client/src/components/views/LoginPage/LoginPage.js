@@ -24,8 +24,8 @@ const LoginPage = (props) => {
     dispatch(loginUser(body))
     .then(response=>{
       if(response.payload.loginSuccess){
-        // props.history.push('/')
-        console.log(response.payload.loginSuccess);
+        props.history.push('/')
+        // console.log(response.payload.loginSuccess);
         
       }else{
         alert("Error")
