@@ -21,7 +21,7 @@ mongoose.connect(mongoURI, {
 .then(() => { console.log("connected") })
 .catch((err) => { console.log(err) })
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Hello world')
 })
 
