@@ -1,0 +1,9 @@
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  text-decoration: none;
+  margin-left: 0;
+  list-style: none;
+  font-size: 25px;
+}
+
