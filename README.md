@@ -1,6 +1,11 @@
-# BoilerPlate
+# aws에 올려 테스트하기 위한 용도입니다
 
-최종 완성본입니다.
+변경점 : bcrypt 대신 bcryptjs설치, 레디스 설치, dotenv설치
 
-수정해서 사용하려면 server-config 경로에 dev.js 파일을 만들고,
-client와 프로젝트 메인 경로에서 각각 npm install을 한번씩 해합니다
+# 세팅
+1. npm install을 client와 server에서 한번씩
+2. .env파일을 생성후 vim으로 내용 작성
+
+# aws에서 에러 발생시
+1. node_modules삭제 후 npm install
+2. 알아서 원인 찾기

@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const app = express();
+const dotenv =require('dotenv');
+dotenv.config();
 
 const userRouter = require('./router/user')
 const redisRouter = require('./router/redis')
