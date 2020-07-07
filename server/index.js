@@ -15,6 +15,8 @@ mongoose.connect(mongoURI, {
 .then(() => { console.log("connected") })
 .catch((err) => { console.log(err) })
 
+
+
 //application/x-www-form-urlencoded 타입 데이터를 분석해서 가져올 수 있게 해준다.
 app.use(bodyParser.urlencoded({ extended: true }));
 //application/json 타입 데이터를 분석해 가져올 수 있게 해준다.
